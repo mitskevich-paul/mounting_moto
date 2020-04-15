@@ -142,8 +142,10 @@ start.addEventListener('click',() => {
                 this.rSpeed = 5;
                 k.ArrowUp = 1;
                 this.x -= speed * 5;
-                let audio = new Audio('5.mp3');
-                audio.play();
+                if (mute === true) {
+                    let audio = new Audio('5.mp3');
+                    audio.play();
+                }
                 speed = 666;
                 document.querySelector('.control').classList.add('displayNone');
                 document.querySelector('.controlPhone').classList.add('displayNone');

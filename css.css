@@ -1,28 +1,41 @@
 body {
     overflow: hidden;
 }
+.hud {
+    opacity: 0;
+}
 canvas {
     position: absolute;
-    top: 5%;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 0%;
+}
+.container {
+    width: 80%;
+    height: 60vh;
+    margin: auto auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 }
 h1 {
     font-size: 50px;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
+    margin: 10px;
 }
 h2 {
     font-size: 50px;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
-    margin-top: 15%;
+    margin: 10px;
 }
 input {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%);
     border: none;
     border-radius: 10px;
     width: 200px;
@@ -30,12 +43,33 @@ input {
     background: rgba(136, 136, 136, 0.534);
     font-size: 20px;
     text-align: center;
+    margin: 10px;
+}
+#mute {
+    display: none;
+}
+label {
+    display: block;
+    width: 100px;
+    height: 50px;
+    border: 3px solid black;
+    box-sizing: border-box;
+    border-radius: 27px;
+}
+.checked {
+    width: 44px;
+    height: 44px;
+    background: url("./soundOff.png");
+    background-size: cover;
+    border: 3px solid red;
+    box-sizing: border-box;
+    border-radius: 25px;
+    transition: ease-out .5s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 button {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
     border: 0;
     border-radius: 10px;
     width: 500px;
@@ -43,4 +77,25 @@ button {
     background: rgba(2, 250, 15, 0.603);
     font-size: 30px;
     cursor: pointer;
+    margin: 10px;
+}
+
+@media all and (max-width: 1750px) {
+    canvas {
+        transform: scale(0.95);
+    }
+}
+@media all and (max-width: 1350px) {
+    canvas {
+        transform: scale(0.9);
+    }
+    h1,
+    h2 {
+        font-size: 20px;
+    }
+    button,
+    input  {
+        width: 80%;
+        font-size: 15px;
+    }
 }

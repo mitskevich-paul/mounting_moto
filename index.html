@@ -8,6 +8,12 @@
 </head>
 <body>
     <input type="text" class="hud">
+    <div class="controlPhone displayNone">
+        <button class="buttonControl buttonUp"></button>
+        <button class="buttonControl buttonDown"></button>
+        <button class="buttonControl buttonRight"></button>
+        <button class="buttonControl buttonLeft"></button>
+    </div>
     <div class="container">
         <h1>Gravity Moto</h1>
         <button class="start">START</button>
@@ -15,9 +21,20 @@
             <input id="mute" type="checkbox">
             <div class="checked"></div>
         </label>
+        <div class="control">
+            <p class="cotrol">Arrow &uarr; - move forward</p>
+            <p class="cotrol">Arrow &darr; - brakes</p>
+            <p class="cotrol">Arrow &rarr; - rotate right</p>
+            <p class="cotrol">Arrow &larr; - rotate left</p>
+        </div>
+        
         <div class="score">
-            <h2>Your Score</h2>
+            <h2>Game over</h2>
+            <h2>You're dead</h2>
+            <h2>completely &#9785;</h2>
+            <h2>Your Score:</h2>
             <input class="scoreMenu" type="number" readonly>
+            <button class="restart"></button>
         </div>
     </div>
     <script src="./js.js"></script>

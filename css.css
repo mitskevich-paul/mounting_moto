@@ -1,14 +1,19 @@
 body {
     overflow: hidden;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 .hud {
-    opacity: 0;
+    display: none;
 }
 canvas {
     position: absolute;
     top: 0%;
 }
 .container {
+    position: relative;
     width: 80%;
     height: 60vh;
     margin: auto auto;
@@ -16,12 +21,16 @@ canvas {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
 }
-.score {
+.control {
+    height: fit-content;
+    width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: space-around;
 }
 h1 {
     font-size: 50px;
@@ -79,15 +88,79 @@ button {
     cursor: pointer;
     margin: 10px;
 }
-
+.counterRotate {
+    position: absolute;
+    z-index: 13123123;
+    width: 80px;
+    height: 80px;
+    border: 5px solid red;
+}
+.score {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    display: none;
+}
+.displayNone {
+    display: none;
+}
+.controlPhone {
+    position: absolute;
+    width: 100%;
+    height: 60%;
+    z-index: 667;
+    bottom: 0;
+}
+.buttonControl {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    background: url('./arrow.png');
+    background-size: cover;
+}
+.buttonUp {
+    left: 0;
+    bottom: 60px;
+    transform: rotate(180deg);
+}
+.buttonDown {
+    left: 0;
+    bottom: 0;
+}
+.buttonRight {
+    right: 0;
+    bottom: 0;
+    transform: rotate(-90deg);
+}
+.buttonLeft {
+    right: 60px;
+    bottom: 0;
+    transform: rotate(90deg);
+}
+.restart {
+    background: url("./restart.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 1px solid red;
+}
 @media all and (max-width: 1750px) {
     canvas {
-        transform: scale(0.95);
+        width: 100%;
+        height: 100%;
     }
 }
 @media all and (max-width: 1350px) {
     canvas {
-        transform: scale(0.9);
+        width: 100%;
+        height: 100%;
     }
     h1,
     h2 {
@@ -97,5 +170,8 @@ button {
     input  {
         width: 80%;
         font-size: 15px;
+    }
+    .score {
+        font-size: 10px;
     }
 }

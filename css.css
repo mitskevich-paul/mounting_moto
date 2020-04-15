@@ -88,13 +88,6 @@ button {
     cursor: pointer;
     margin: 10px;
 }
-.counterRotate {
-    position: absolute;
-    z-index: 13123123;
-    width: 80px;
-    height: 80px;
-    border: 5px solid red;
-}
 .score {
     position: absolute;
     top: 0;

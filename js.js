@@ -2,6 +2,7 @@ let checkMute = document.querySelector("#mute");
 let muteLabel = document.querySelector(".mute");
 let tracker = document.querySelector(".checked");
 let mute = false;
+let mobile = false;
 muteLabel.addEventListener("click", () => {
     if (checkMute.checked === true) {
         tracker.style.background = `url("./soundOn.png")`;
@@ -19,6 +20,7 @@ muteLabel.addEventListener("click", () => {
 })
 let start = document.querySelector('.start');
 start.addEventListener('click',() => {
+    start.setAttribute("disabled", "true");
     if (mute === true) {
         let startEnineGame = new Audio('1.mp3')
         startEnineGame.play();
@@ -28,7 +30,10 @@ start.addEventListener('click',() => {
     c.width = window.innerWidth;
     c.height = window.innerHeight;
     document.body.appendChild(c);
-    
+    window.addEventListener('resize', () => {
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+    });
     rain = function() {
         let accelleration = .099;
         let size = 0.8;
@@ -70,18 +75,32 @@ start.addEventListener('click',() => {
     let cyParameter;
     let cxHeightParameter;
     let cyHeightParameter;
-    if (window.innerWidth > 1200 && window.innerHeight > 780) {
+    if (window.innerWidth > 1200) {
         wavesHight = (a, b, t) => 2 * a + (2 * b - 2 * a) * (1 - Math.cos(t * Math.PI)) / 2;
         cxParameter = -70;
         cyParameter = -70;
         cxHeightParameter = 100;
         cyHeightParameter = 100;
-    } else if (window.innerWidth < 1200 && window.innerHeight < 780) {
+    } else if (window.innerWidth > 720) {
         wavesHight = (a, b, t) => a + (b - a) * (1 - Math.cos(t * Math.PI)) / 2;
         cxParameter = -30;
         cyParameter = -30;
         cxHeightParameter = 60;
         cyHeightParameter = 60;
+    } else if (window.innerWidth < 720) {
+        mobile = true;
+        wavesHight = (a, b, t) => a + (b - a) * (1 - Math.cos(t * Math.PI)) / 2;
+        cxParameter = -10;
+        cyParameter = -10;
+        cxHeightParameter = 40;
+        cyHeightParameter = 40;
+        let controlsButtons = document.querySelectorAll('.controlButton');
+        for (let i = 0; i < controlsButtons.length; i++) {
+            controlsButtons[i].classList.remove('displayNone');
+        }
+    }
+    if (mobile === true) {
+        document.querySelector('.controlPhone').classList.remove('displayNone')
     }
     let waves = x => {
         x = x * 0.005 % 255;
@@ -99,7 +118,10 @@ start.addEventListener('click',() => {
         this.ySpeed = 0;
         this.rotated = 0;
         this.rSpeed = 0;
-    
+        window.addEventListener('resize', () => {
+            this.y = c.height / 2;
+        });
+
         this.img = new Image();
         this.img.src = './1.png';
 
@@ -109,7 +131,7 @@ start.addEventListener('click',() => {
             let grounded = 0;
     
             if (p1 - 15 > this.y) {
-                this.ySpeed += 0.25;
+                this.ySpeed += 0.25; 
             } else {
                 this.ySpeed -= this.y - (p1 - 15);
                 this.y = p1 - 15;
@@ -120,11 +142,21 @@ start.addEventListener('click',() => {
                 this.rSpeed = 5;
                 k.ArrowUp = 1;
                 this.x -= speed * 5;
+                let audio = new Audio('5.mp3');
+                audio.play();
+                speed = 666;
+                document.querySelector('.control').classList.add('displayNone');
+                document.querySelector('.controlPhone').classList.add('displayNone');
                 document.querySelector('canvas').parentNode.removeChild(document.querySelector('canvas'));
+                document.querySelector('.score').style.display = "flex";
+                let restart = document.querySelector('.restart');
+                restart.addEventListener('click',() => {
+                    location.reload()
+                });
             } 
             let angle = Math.atan2((p2 - 15) - this.y, (this.x + 5) - this.x)
             this.y += this.ySpeed;
-    
+
             if (!grounded && playing) {
                 score += 1;
                 document.querySelector('.scoreMenu').value = score;
@@ -141,7 +173,26 @@ start.addEventListener('click',() => {
             } else if (this.rotated < -Math.PI) {
                 this.rotated = Math.PI;
             }
-    
+            if (mobile === true) {
+                let buttonRight = document.querySelector(".buttonRight");
+                let buttonLeft = document.querySelector(".buttonLeft");
+                buttonRight.addEventListener("touchstart", (e) => {
+                    e.preventDefault();
+                    k.ArrowRight = 1;
+        
+                    e.target.addEventListener("touchend", () => {
+                        k.ArrowRight = 0;
+                    });
+                });
+                buttonLeft.addEventListener("touchstart", (e) => {
+                    e.preventDefault();
+                    k.ArrowLeft = 1;
+        
+                    e.target.addEventListener("touchend", () => {
+                        k.ArrowLeft = 0;
+                    });
+                });
+            }
             ctx.save();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.rotated)
@@ -167,6 +218,27 @@ start.addEventListener('click',() => {
     let playing = true;
     let k = {ArrowUp : 0, ArrowDown : 0, ArrowLeft : 0, ArrowRight : 0};
     function loop() {
+        
+    if (mobile === true) {
+        let buttonSpeedUp = document.querySelector(".buttonUp");
+        let buttonSpeedDown = document.querySelector(".buttonDown");
+        buttonSpeedUp.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            k.ArrowUp = 1;
+
+            e.target.addEventListener("touchend", () => {
+                k.ArrowUp = 0;
+            });
+        });
+        buttonSpeedDown.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            k.ArrowUp = -1;
+
+            e.target.addEventListener("touchend", () => {
+                k.ArrowUp = 0;
+            });
+        });
+    }
         if (speed >= 0) {
             speed -= (speed - (k.ArrowUp - k.ArrowDown)) * 0.01;
             acceleration += 10 * speed;
@@ -199,16 +271,16 @@ start.addEventListener('click',() => {
         setInterval(() => {
             let hud = document.querySelector(".hud");
             hud.value = speed;
-            if (hud.value === "0" && playing || k.ArrowDown === 1) {
+            if (hud.value === "0" || k.ArrowDown === 1 && hud.value !== "666") {
                 let audio = new Audio('2.mp3');
                 audio.play();
-            } else if (hud.value > "0" && hud.value < "0.7" && playing && k.ArrowUp === 1) {
+            } else if (hud.value > "0" && hud.value < "0.7" && k.ArrowUp === 1 && hud.value !== "666") {
                 let audio = new Audio('3.mp3');
                 audio.play();
-            } else if (hud.value >= "0.7" && playing && k.ArrowUp === 1) {
+            } else if (hud.value >= "0.7" && k.ArrowUp === 1 && hud.value !== "666") {
                 let audio = new Audio('4.mp3');
                 audio.play();
-            } else if (hud.value !== "0" && k.ArrowUp === 0) {
+            } else if (hud.value !== "0" && k.ArrowUp === 0 && hud.value !== "666") {
                 let audio = new Audio('2.mp3');
                 audio.play();
             }

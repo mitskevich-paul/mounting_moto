@@ -82,6 +82,7 @@ start.addEventListener('click',() => {
         cxHeightParameter = 100;
         cyHeightParameter = 100;
     } else if (window.innerWidth > 720) {
+        mobile = true;
         wavesHight = (a, b, t) => a + (b - a) * (1 - Math.cos(t * Math.PI)) / 2;
         cxParameter = -30;
         cyParameter = -30;

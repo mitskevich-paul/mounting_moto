@@ -114,12 +114,12 @@ start.addEventListener('click',() => {
 
     let player = new function() {
         this.x = c.width / 3;
-        this.y = c.height / 2;
+        this.y = c.height * 0,2;
         this.ySpeed = 0;
         this.rotated = 0;
         this.rSpeed = 0;
         window.addEventListener('resize', () => {
-            this.y = c.height / 2;
+            this.y = c.height * 0,2;
         });
 
         this.img = new Image();

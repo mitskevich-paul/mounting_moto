@@ -1,23 +1,98 @@
-let start = document.querySelector('button');
+let checkMute = document.querySelector("#mute");
+let muteLabel = document.querySelector(".mute");
+let tracker = document.querySelector(".checked");
+let mute = false;
+muteLabel.addEventListener("click", () => {
+    if (checkMute.checked === true) {
+        tracker.style.background = `url("./soundOn.png")`;
+        tracker.style.transform = "translateX(50px)";
+        tracker.style.backgroundSize = "cover";
+        tracker.style.border = "3px solid green"
+        mute = true;
+    } else if (checkMute.checked === false) {
+        tracker.style.transform = "translateX(0px)"
+        tracker.style.background = `url("./soundOff.png")`;
+        tracker.style.backgroundSize = "cover";
+        tracker.style.border = "3px solid red"
+        mute = false;
+    }
+})
+let start = document.querySelector('.start');
 start.addEventListener('click',() => {
+    if (mute === true) {
+        let startEnineGame = new Audio('1.mp3')
+        startEnineGame.play();
+    }
     let c = document.createElement('canvas');
     let ctx = c.getContext('2d');
-    c.width = 1280;
-    c.height = 720;
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
     document.body.appendChild(c);
+    
+    rain = function() {
+        let accelleration = .099;
+        let size = 0.8;
+        let occupation = 5;
+        let dots = [];
+        let dotsVel = [];
+    
+        for(let i = 0; i < c.width; ++i){
+            dots[i] = c.height;
+            dotsVel[i] = 100;
+        }
+    
+        function anim(){
+            requestAnimationFrame(anim);
+            
+            for(let i = 0; i < c.width; ++i){
+                let currentY = dots[i] - 1;
+                dots[i] += dotsVel[i] += accelleration;
+                
+                ctx.fillStyle = 'rgb(255,255,255)';
+                ctx.fillRect(occupation * i, currentY, size, dotsVel[i] + 10);
+                
+                if(dots[i] > c.height && Math.random() < .01){
+                dots[i] = dotsVel[i] = 0;
+                }
+            }
+        }
+        anim();
+    }
     
     let ground = [];
     while (ground.length < 255) {
         while (ground.includes(val = Math.floor(Math.random()*255)));
         ground.push(val);
     }
-    
-    let wavesHight = (a, b, t) => 2 * a + (2 * b - 2 * a) * (1 - Math.cos(t * Math.PI)) / 2;
+
+    let wavesHight;
+    let cxParameter;
+    let cyParameter;
+    let cxHeightParameter;
+    let cyHeightParameter;
+    if (window.innerWidth > 1200 && window.innerHeight > 780) {
+        wavesHight = (a, b, t) => 2 * a + (2 * b - 2 * a) * (1 - Math.cos(t * Math.PI)) / 2;
+        cxParameter = -70;
+        cyParameter = -70;
+        cxHeightParameter = 100;
+        cyHeightParameter = 100;
+    } else if (window.innerWidth < 1200 && window.innerHeight < 780) {
+        wavesHight = (a, b, t) => a + (b - a) * (1 - Math.cos(t * Math.PI)) / 2;
+        cxParameter = -30;
+        cyParameter = -30;
+        cxHeightParameter = 60;
+        cyHeightParameter = 60;
+    }
     let waves = x => {
         x = x * 0.005 % 255;
         return wavesHight(ground[Math.floor(x)], ground[Math.ceil(x)], x - Math.floor(x));
     }
-    
+    let cloudsHight = (a, b, t) => a + (b - a) * (1 - Math.cos(t * Math.PI)) / 2;
+        let cloudsWaves = x => {
+            x = x * 0.002 % 255;
+            return cloudsHight(ground[Math.floor(x)], ground[Math.ceil(x)], x - Math.floor(x));
+        }
+
     let player = new function() {
         this.x = c.width / 3;
         this.y = c.height / 2;
@@ -27,6 +102,7 @@ start.addEventListener('click',() => {
     
         this.img = new Image();
         this.img.src = './1.png';
+
         this.draw = function() {
             let p1 = c.height - waves(acceleration + this.x) * 0.55; 
             let p2 = c.height - waves(acceleration + 3 + this.x) * 0.55; 
@@ -51,7 +127,7 @@ start.addEventListener('click',() => {
     
             if (!grounded && playing) {
                 score += 1;
-                document.querySelector('input').value = score;
+                document.querySelector('.scoreMenu').value = score;
             }
             if (grounded && playing) {
                 this.rotated -= (this.rotated - angle) * 0.5;
@@ -69,11 +145,22 @@ start.addEventListener('click',() => {
             ctx.save();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.rotated)
-            ctx.drawImage(this.img, -70, -70, 100, 100);
+            ctx.drawImage(this.img, cxParameter, cyParameter, cxHeightParameter, cyHeightParameter);
             ctx.restore();
         }
     }
-    
+    function drawClouds() {
+        ctx.fillStyle = 'rgb(255, 255, 255)';
+        ctx.beginPath();
+        ctx.moveTo(c.width, 0);
+        ctx.lineTo(0, 0)
+        for (let i = 0; i < c.width; i++) {
+            ctx.lineTo(i, c.height / 8 - cloudsWaves(acceleration + i) * 0.75);
+        }
+        ctx.stroke();
+        ctx.fill();
+    }
+
     let score = 0;
     let acceleration = 0;
     let speed = 0;
@@ -95,16 +182,36 @@ start.addEventListener('click',() => {
         for (let i = 0; i < c.width; i++) {
             ctx.lineTo (i, c.height - waves(acceleration + i) * 0.55);
         }
-    
+
         ctx.lineTo(c.width, c.height);
         ctx.fill();
-    
         player.draw();
         requestAnimationFrame(loop);
+        drawClouds();
     }
-    
     onkeydown = d => k[d.key] = 1;
     onkeyup = d => k[d.key] = 0;
-    
+
     loop();
+    rain();
+    
+    if (mute === true) {
+        setInterval(() => {
+            let hud = document.querySelector(".hud");
+            hud.value = speed;
+            if (hud.value === "0" && playing || k.ArrowDown === 1) {
+                let audio = new Audio('2.mp3');
+                audio.play();
+            } else if (hud.value > "0" && hud.value < "0.7" && playing && k.ArrowUp === 1) {
+                let audio = new Audio('3.mp3');
+                audio.play();
+            } else if (hud.value >= "0.7" && playing && k.ArrowUp === 1) {
+                let audio = new Audio('4.mp3');
+                audio.play();
+            } else if (hud.value !== "0" && k.ArrowUp === 0) {
+                let audio = new Audio('2.mp3');
+                audio.play();
+            }
+        }, 1050);
+    }
 });

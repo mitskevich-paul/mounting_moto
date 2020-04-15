@@ -7,10 +7,19 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Gravity Moto</h1>
-    <h2>Your Score</h2>
-    <button>START</button>
-    <input type="number" readonly>
+    <input type="text" class="hud">
+    <div class="container">
+        <h1>Gravity Moto</h1>
+        <button class="start">START</button>
+        <label class="mute" for="mute">
+            <input id="mute" type="checkbox">
+            <div class="checked"></div>
+        </label>
+        <div class="score">
+            <h2>Your Score</h2>
+            <input class="scoreMenu" type="number" readonly>
+        </div>
+    </div>
     <script src="./js.js"></script>
 </body>
 </html>
